@@ -24,44 +24,39 @@
     
     responseElement.textContent = '... جارٍ الإرسال، انتظر رجاءً ...';
 
+    // 1. تجهيز البيانات كـ FormData
+    const formData = new FormData();
+    // نضع البيانات التي نريد إرسالها في حقل واحد (مثلاً 'jsonPayload')
     const payload = {
         newData: dataElement.value,
         timestamp: new Date().toLocaleString('ar-EG')
     };
+    
+    formData.append('jsonPayload', JSON.stringify(payload));
 
-    // نستخدم XMLHttpRequest بدلاً من Fetch لضمان تجنب مشاكل CORS مع Apps Script
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', WEB_APP_URL);
-    
-    // **المفتاح:** نستخدم نوع محتوى 'application/x-www-form-urlencoded'
-    // أو لا نحدد Content-Type ونرسلها كسلسلة عادية.
-    xhr.setRequestHeader('Content-Type', 'text/plain'); // الأكثر موثوقية هنا
-    
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            try {
-                const result = JSON.parse(xhr.responseText);
-                if (result.status === 'success') {
-                    responseElement.textContent = `✅ نجح التعديل: ${result.message}\n\nمحتوى الملف بعد التعديل:\n${JSON.stringify(result.content, null, 2)}`;
-                } else {
-                    responseElement.textContent = `❌ فشل التعديل: ${result.message}\nالخطأ: ${result.message}`;
-                }
-            } catch (e) {
-                responseElement.textContent = `⚠️ فشل في تحليل استجابة Apps Script: ${xhr.responseText}`;
-            }
+    // 2. استخدام Fetch API مع FormData (يُعتبر طلب بسيط)
+    fetch(WEB_APP_URL, {
+        method: 'POST',
+        // نمرر الـ FormData مباشرةً. **لا تُحدد Content-Type.**
+        body: formData 
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.status === 'success') {
+            responseElement.textContent = `✅ نجح التعديل: ${result.message}\n\nمحتوى الملف بعد التعديل:\n${JSON.stringify(result.content, null, 2)}`;
         } else {
-            responseElement.textContent = `❌ فشل الاتصال برمز حالة: ${xhr.status} (هل الرابط صحيح؟)`;
+            responseElement.textContent = `❌ فشل التعديل: ${result.message}`;
         }
-    };
-    
-    xhr.onerror = function() {
-        responseElement.textContent = '❌ خطأ شبكة/اتصال غير معروف.';
-    };
-
-    // إرسال البيانات كسلسلة JSON
-    xhr.send(JSON.stringify(payload));
+    })
+    .catch(error => {
+        // هذا قد لا يزال يظهر خطأ CORS في الكونسول، لكن السكريبت سيتم تشغيله بنجاح.
+        // إذا استمر فشل الاتصال بالكامل، راجع الخطوة 3.
+        responseElement.textContent = '⚠️ حدث خطأ في الاتصال. تأكد من إزالة قفل 429.';
+        console.error('Error:', error);
+    });
 }
     </script>
 </body>
 </html>
+
 
