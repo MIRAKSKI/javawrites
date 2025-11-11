@@ -18,42 +18,50 @@
         // *** استبدل هذا برابط تطبيق الويب الذي نسخته من Apps Script ***
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzS70T4yK7YXviM6DU25QwpWvqTPdTri88uFgX0tdANURBcTm8A86G9j72oridJtzyi/exec";
 
-        async function sendData() {
-            const dataElement = document.getElementById('newData');
-            const responseElement = document.getElementById('response');
+        function sendData() {
+    const dataElement = document.getElementById('newData');
+    const responseElement = document.getElementById('response');
+    
+    responseElement.textContent = '... جارٍ الإرسال، انتظر رجاءً ...';
 
-            responseElement.textContent = '... جارٍ الإرسال، انتظر رجاءً ...';
+    const payload = {
+        newData: dataElement.value,
+        timestamp: new Date().toLocaleString('ar-EG')
+    };
 
-            // 1. تجهيز البيانات للإرسال (تأكد أن تتطابق مع التنسيق الذي تتوقعه دالة doPost)
-            const payload = {
-                newData: dataElement.value,
-                timestamp: new Date().toLocaleString('ar-EG')
-            };
-
+    // نستخدم XMLHttpRequest بدلاً من Fetch لضمان تجنب مشاكل CORS مع Apps Script
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', WEB_APP_URL);
+    
+    // **المفتاح:** نستخدم نوع محتوى 'application/x-www-form-urlencoded'
+    // أو لا نحدد Content-Type ونرسلها كسلسلة عادية.
+    xhr.setRequestHeader('Content-Type', 'text/plain'); // الأكثر موثوقية هنا
+    
+    xhr.onload = function() {
+        if (xhr.status === 200) {
             try {
-                // 2. إرسال طلب POST إلى سكريبت Apps Script
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    // Apps Script يتوقع البيانات في هذا التنسيق
-                    body: JSON.stringify(payload),
-                    headers: {
-                        'Content-Type': 'text/plain' // مهم جداً
-                    }
-                });
-
-                // 3. معالجة الاستجابة
-                const result = await response.json();
-
+                const result = JSON.parse(xhr.responseText);
                 if (result.status === 'success') {
                     responseElement.textContent = `✅ نجح التعديل: ${result.message}\n\nمحتوى الملف بعد التعديل:\n${JSON.stringify(result.content, null, 2)}`;
                 } else {
-                    responseElement.textContent = `❌ فشل التعديل: ${result.message}`;
+                    responseElement.textContent = `❌ فشل التعديل: ${result.message}\nالخطأ: ${result.message}`;
                 }
-
-            } catch (error) {
-                responseElement.textContent = `⚠️ حدث خطأ في الاتصال: ${error.message}`;
+            } catch (e) {
+                responseElement.textContent = `⚠️ فشل في تحليل استجابة Apps Script: ${xhr.responseText}`;
             }
+        } else {
+            responseElement.textContent = `❌ فشل الاتصال برمز حالة: ${xhr.status} (هل الرابط صحيح؟)`;
         }
+    };
+    
+    xhr.onerror = function() {
+        responseElement.textContent = '❌ خطأ شبكة/اتصال غير معروف.';
+    };
+
+    // إرسال البيانات كسلسلة JSON
+    xhr.send(JSON.stringify(payload));
+}
     </script>
 </body>
 </html>
+
