@@ -8,7 +8,7 @@
     <h1>إرسال بيانات جديدة إلى ملف data.json</h1>
 
     <label for="newData">أدخل قيمة جديدة (مثل اسم):</label><br>
-    <input type="text" id="newData" value="تجربة إضافة جديدة"><br><br>
+    <input type="text" id="newData" value="" placeholder="تجربة إضافة جديدة"><br><br>
 
     <button onclick="sendData()">إرسال وتعديل الملف</button>
 
@@ -16,7 +16,7 @@
 
     <script>
         // *** استبدل هذا برابط تطبيق الويب الذي نسخته من Apps Script ***
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzS70T4yK7YXviM6DU25QwpWvqTPdTri88uFgX0tdANURBcTm8A86G9j72oridJtzyi/exec"; 
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzS70T4yK7YXviM6DU25QwpWvqTPdTri88uFgX0tdANURBcTm8A86G9j72oridJtzyi/exec";
 
         async function sendData() {
             const dataElement = document.getElementById('newData');
@@ -37,7 +37,7 @@
                     // Apps Script يتوقع البيانات في هذا التنسيق
                     body: JSON.stringify(payload),
                     headers: {
-                        'Content-Type': 'application/json' // مهم جداً
+                        'Content-Type': 'text/plain' // مهم جداً
                     }
                 });
 
