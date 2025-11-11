@@ -8,7 +8,7 @@
 
   </body>
   <script type="text/javascript">
-    import { writeFile } from 'fs/promises';
+    import * as fs from 'fs'; // Import the standard fs module
 
 // --- Configuration ---
 function FFGDFL(link) {
@@ -21,40 +21,44 @@ function FFGDFL(link) {
 }
 links = "https://drive.google.com/file/d/1a18bB5E-qLoXdPxG7sUq3bF1cweQGeMC/view?usp=drive_link";
 t_li = "https://drive.google.com/uc?export=view&id=" + FFGDFL(links);
+// --- Configuration ---
 const FILENAME = t_li;
 const dataObject = {
     user: "Gemini Model",
+    method: "Synchronous Write", // Added context
     timestamp: new Date().toISOString(),
-    status: "success",
     payload: [
-        { id: 1, item: "Apple", price: 0.99 },
-        { id: 2, item: "Banana", price: 0.59 }
+        { id: 1, item: "Orange", price: 0.79 },
+        { id: 2, item: "Grapefruit", price: 1.25 }
     ]
 };
 
 /**
- * Converts a JavaScript object to a JSON string and writes it to a file.
+ * Converts a JavaScript object to a JSON string and writes it to a file
+ * using the synchronous writeFileSync method.
+ *
+ * NOTE: This method blocks the Node.js event loop until the file is completely written.
  * @param {string} filename The path to the output file.
  * @param {object} data The JavaScript object to serialize.
  */
-async function writeDataToJsonFile(filename, data) {
+function writeDataToJsonFileSynchronously(filename, data) {
     try {
         // 1. Convert the JavaScript object to a nicely formatted JSON string.
-        // The third argument (2) specifies indentation for readability.
         const jsonString = JSON.stringify(data, null, 2);
 
-        // 2. Write the string to the file asynchronously.
-        await writeFile(filename, jsonString, 'utf8');
+        // 2. Write the string to the file synchronously.
+        // This function executes entirely before moving to the next line of code.
+        fs.writeFileSync(filename, jsonString, 'utf8');
 
-        console.log(`✅ Data successfully written to ${filename}`);
-        console.log(`Check your project directory for the new file.`);
+        console.log(`✅ Data successfully written to ${filename} (Synchronous Method)`);
 
     } catch (error) {
-        console.error(`❌ Failed to write data to file: ${error.message}`);
+        // Since this is synchronous, errors are caught immediately.
+        console.error(`❌ Failed to write data to file synchronously: ${error.message}`);
     }
 }
 
 // Execute the main function
-writeDataToJsonFile(FILENAME, dataObject);
+writeDataToJsonFileSynchronously(FILENAME, dataObject);
   </script>
 </html>
