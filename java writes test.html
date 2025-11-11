@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+
+  </body>
+  <script type="text/javascript">
+    import { writeFile } from 'fs/promises';
+
+// --- Configuration ---
+function FFGDFL(link) {
+  const regex = /https:\/\/drive\.google\.com\/file\/d\/(?<fileId>[\w-]+)\//;
+  const match = regex.exec(link);
+  if (match) {
+    return match.groups.fileId;
+  }
+  return null;
+}
+links = "https://drive.google.com/file/d/1a18bB5E-qLoXdPxG7sUq3bF1cweQGeMC/view?usp=drive_link";
+t_li = "https://drive.google.com/uc?export=view&id=" + FFGDFL(links);
+const FILENAME = t_li;
+const dataObject = {
+    user: "Gemini Model",
+    timestamp: new Date().toISOString(),
+    status: "success",
+    payload: [
+        { id: 1, item: "Apple", price: 0.99 },
+        { id: 2, item: "Banana", price: 0.59 }
+    ]
+};
+
+/**
+ * Converts a JavaScript object to a JSON string and writes it to a file.
+ * @param {string} filename The path to the output file.
+ * @param {object} data The JavaScript object to serialize.
+ */
+async function writeDataToJsonFile(filename, data) {
+    try {
+        // 1. Convert the JavaScript object to a nicely formatted JSON string.
+        // The third argument (2) specifies indentation for readability.
+        const jsonString = JSON.stringify(data, null, 2);
+
+        // 2. Write the string to the file asynchronously.
+        await writeFile(filename, jsonString, 'utf8');
+
+        console.log(`✅ Data successfully written to ${filename}`);
+        console.log(`Check your project directory for the new file.`);
+
+    } catch (error) {
+        console.error(`❌ Failed to write data to file: ${error.message}`);
+    }
+}
+
+// Execute the main function
+writeDataToJsonFile(FILENAME, dataObject);
+  </script>
+</html>
