@@ -1,64 +1,59 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تعديل ملف JSON في Google Drive</title>
+</head>
+<body>
+    <h1>إرسال بيانات جديدة إلى ملف data.json</h1>
 
-  </body>
-  <script type="text/javascript">
-    import * as fs from 'fs'; // Import the standard fs module
+    <label for="newData">أدخل قيمة جديدة (مثل اسم):</label><br>
+    <input type="text" id="newData" value="تجربة إضافة جديدة"><br><br>
 
-// --- Configuration ---
-function FFGDFL(link) {
-  const regex = /https:\/\/drive\.google\.com\/file\/d\/(?<fileId>[\w-]+)\//;
-  const match = regex.exec(link);
-  if (match) {
-    return match.groups.fileId;
-  }
-  return null;
-}
-links = "https://drive.google.com/file/d/1a18bB5E-qLoXdPxG7sUq3bF1cweQGeMC/view?usp=drive_link";
-t_li = "https://drive.google.com/uc?export=view&id=" + FFGDFL(links);
-// --- Configuration ---
-const FILENAME = t_li;
-const dataObject = {
-    user: "Gemini Model",
-    method: "Synchronous Write", // Added context
-    timestamp: new Date().toISOString(),
-    payload: [
-        { id: 1, item: "Orange", price: 0.79 },
-        { id: 2, item: "Grapefruit", price: 1.25 }
-    ]
-};
+    <button onclick="sendData()">إرسال وتعديل الملف</button>
 
-/**
- * Converts a JavaScript object to a JSON string and writes it to a file
- * using the synchronous writeFileSync method.
- *
- * NOTE: This method blocks the Node.js event loop until the file is completely written.
- * @param {string} filename The path to the output file.
- * @param {object} data The JavaScript object to serialize.
- */
-function writeDataToJsonFileSynchronously(filename, data) {
-    try {
-        // 1. Convert the JavaScript object to a nicely formatted JSON string.
-        const jsonString = JSON.stringify(data, null, 2);
+    <pre id="response"></pre>
 
-        // 2. Write the string to the file synchronously.
-        // This function executes entirely before moving to the next line of code.
-        fs.writeFileSync(filename, jsonString, 'utf8');
+    <script>
+        // *** استبدل هذا برابط تطبيق الويب الذي نسخته من Apps Script ***
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzS70T4yK7YXviM6DU25QwpWvqTPdTri88uFgX0tdANURBcTm8A86G9j72oridJtzyi/exec"; 
 
-        console.log(`✅ Data successfully written to ${filename} (Synchronous Method)`);
+        async function sendData() {
+            const dataElement = document.getElementById('newData');
+            const responseElement = document.getElementById('response');
 
-    } catch (error) {
-        // Since this is synchronous, errors are caught immediately.
-        console.error(`❌ Failed to write data to file synchronously: ${error.message}`);
-    }
-}
+            responseElement.textContent = '... جارٍ الإرسال، انتظر رجاءً ...';
 
-// Execute the main function
-writeDataToJsonFileSynchronously(FILENAME, dataObject);
-  </script>
+            // 1. تجهيز البيانات للإرسال (تأكد أن تتطابق مع التنسيق الذي تتوقعه دالة doPost)
+            const payload = {
+                newData: dataElement.value,
+                timestamp: new Date().toLocaleString('ar-EG')
+            };
+
+            try {
+                // 2. إرسال طلب POST إلى سكريبت Apps Script
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    // Apps Script يتوقع البيانات في هذا التنسيق
+                    body: JSON.stringify(payload),
+                    headers: {
+                        'Content-Type': 'application/json' // مهم جداً
+                    }
+                });
+
+                // 3. معالجة الاستجابة
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    responseElement.textContent = `✅ نجح التعديل: ${result.message}\n\nمحتوى الملف بعد التعديل:\n${JSON.stringify(result.content, null, 2)}`;
+                } else {
+                    responseElement.textContent = `❌ فشل التعديل: ${result.message}`;
+                }
+
+            } catch (error) {
+                responseElement.textContent = `⚠️ حدث خطأ في الاتصال: ${error.message}`;
+            }
+        }
+    </script>
+</body>
 </html>
