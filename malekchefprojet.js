@@ -1,4 +1,3 @@
-////////"AKfycbzS70T4yK7YXviM6DU25QwpWvqTPdTri88uFgX0tdANURBcTm8A86G9j72oridJtzyi"
 let h = "AKfycbzS7xT3yK7YXviM6DUz4QwpWvqTPdTri88uFgXxtdANURBcTm8A86G9j7zoridJtzyi";
 const WEB_APP_URL = "https://script.google.com/macros/s/passkey/exec";
 WEB_APP_URL.replace("passkey", decoderX(h));
@@ -235,3 +234,4 @@ function setEDITED(id) {
   document.getElementById(id).setAttribute("onclick", "viewer(this.id)");
   closediag();
 }
+
