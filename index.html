@@ -1,64 +1,306 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>تعديل ملف JSON في Google Drive</title>
-</head>
-<body>
-    <h1>إرسال بيانات جديدة إلى ملف data.json</h1>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      html {margin: 0px;padding: 0px;}
+      body {display: grid;justify-content: center;margin: 0px;padding: 0px;}
+      .view {display:flex;}
+      .battey {display:grid;margin: 0 3px;}
+      .axey {display:flex;}
+      .axeZ {display:flex;width: 100%;justify-content: center;}
+      .eley, .elex {border-radius:50%;background: rgb(100,100,100);width:20px;height:20px;margin:1px;}
+      .elex {background: transparent;}
+      .eleypro {border-radius:50%;background: rgb(100,255,100);width:20px;height:20px;margin:1px;}
+      .clamo {width:100%;display:grid}
+      .ttlmo {display:flex;width:100%;}
+      .grmo {display:flex;width:100%;}
+      .dymo {display:grid;}
+      p {margin: 2px;font-size: 16px;text-align: center;}
+      .bgdiag {position: absolute;;z-index: 99;background: rgba(170, 170, 170, 0.5);width: 100%;height: 100%;}
+      .hdiag {position: absolute;top:50%;left:50%;transform: translate(-50%, -50%);
+        background: rgb(255,255,255);border-radius: 20px;width:65%;height: 50%;place-items:center;
+      }
+      .selector , .inputer {border: 1px solid rgb(20,200,150);border-radius: 5px;text-align: center;}
+      .hhldiag {position: relative;width: 100%;display: flex;justify-content: center;margin: 5px 0px;height: 21%;}
+      .selector {width:100px;margin:0 2px;}
+      .seteditbtn {
+        height: 30px;text-align: center;border: 1px solid rgb(20,200,150);border-radius: 5px;transition: 0.2s;
+      }
+      .seteditbtn:hover {
+        border: 1px solid rgb(200,150,20);background: rgb(20,200,150);color: white;cursor: pointer;
+      }
+      .inputer {width:100px;margin:0 2px;height: 20px;}
+      .clsbtn {position: absolute;background: transparent;border: none;font-weight: bold;transform: 0.2s;top:5%;right:5%;}
+      .clsbtn:hover {color :red;}
+      select {max-height: 20px;}
+    </style>
+  </head>
+  <body>
+    <div class="view" id="host">
 
-    <label for="newData">أدخل قيمة جديدة (مثل اسم):</label><br>
-    <input type="text" id="newData" value="" placeholder="تجربة إضافة جديدة"><br><br>
-
-    <button onclick="sendData()">إرسال وتعديل الملف</button>
-
-    <pre id="response"></pre>
-
-    <script>
-        // *** استبدل هذا برابط تطبيق الويب الذي نسخته من Apps Script ***
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzS70T4yK7YXviM6DU25QwpWvqTPdTri88uFgX0tdANURBcTm8A86G9j72oridJtzyi/exec";
-
-        function sendData() {
-    const dataElement = document.getElementById('newData');
-    const responseElement = document.getElementById('response');
-    
-    responseElement.textContent = '... جارٍ الإرسال، انتظر رجاءً ...';
-
-    // 1. تجهيز البيانات كـ FormData
-    const formData = new FormData();
-    // نضع البيانات التي نريد إرسالها في حقل واحد (مثلاً 'jsonPayload')
-    const payload = {
-        newData: dataElement.value,
-        timestamp: new Date().toLocaleString('ar-EG')
-    };
-    console.log(payload);
-    
-    formData.append('jsonPayload', JSON.stringify(payload));
-
-    // 2. استخدام Fetch API مع FormData (يُعتبر طلب بسيط)
-    fetch(WEB_APP_URL, {
-        method: 'POST',
-        // نمرر الـ FormData مباشرةً. **لا تُحدد Content-Type.**
-        body: formData 
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.status === 'success') {
-            responseElement.textContent = `✅ نجح التعديل: ${result.message}\n\nمحتوى الملف بعد التعديل:\n${JSON.stringify(result.content, null, 2)}`;
-        } else {
-            responseElement.textContent = `❌ فشل التعديل: ${result.message}`;
+    </div>
+  </body>
+  <script type="text/javascript">
+    let dec = new Object();let cryppassKey,passKey;
+    function startupset() {
+      //
+    }
+    function opening() {
+      let fille = "ABCDEFGHIJK";fille = fille.split("");
+      let bat = ["", "%", "#"];
+      let axe = document.createElement('div');
+      axe.setAttribute('class', "battey");
+      for (var y = 0; y < 12; y++) {
+        let divx = document.createElement('div');
+        divx.setAttribute('class', "axey");
+        let divz = document.createElement('div');
+        divz.setAttribute('class', "");
+        let part = document.createElement('p');
+        part.innerText = (y);
+        if (y == 0) {
+          part.setAttribute("style", "opacity:0;")
         }
-    })
-    .catch(error => {
-        // هذا قد لا يزال يظهر خطأ CORS في الكونسول، لكن السكريبت سيتم تشغيله بنجاح.
-        // إذا استمر فشل الاتصال بالكامل، راجع الخطوة 3.
-        responseElement.textContent = '⚠️ حدث خطأ في الاتصال. تأكد من إزالة قفل 429.';
-        console.error('Error:', error);
-    });
-}
-    </script>
-</body>
+        divz.appendChild(part);;
+        divx.appendChild(divz);
+        axe.appendChild(divx);
+      }
+      host.appendChild(axe);
+      for (var i = 0; i < 3; i++) {
+        let div = document.createElement('div');
+        div.setAttribute('class', "battey");
+        let divpp = document.createElement('div');
+        divpp.setAttribute('class', "axey");
+        for (var z = 0; z < 11; z++) {
+          let divz = document.createElement('div');
+          divz.setAttribute('class', "elex");
+          let part = document.createElement('p');
+          let idf = bat[i].replace("%", "'");idf = idf.replace("#", "\"");
+          let fil = fille[z] + idf;
+          part.innerText = fil;
+          divz.appendChild(part);;
+          divpp.appendChild(divz);
+        }
+        div.appendChild(divpp);
+        for (var y = 0; y < 11; y++) {
+          let divx = document.createElement('div');
+          divx.setAttribute('class', "axey");
+          for (var z = 0; z < 11; z++) {
+            let divz = document.createElement('div');
+            divz.setAttribute('class', "eley");
+            let id = fille[z]+bat[i]+(y+1);
+            divz.setAttribute('id', id);
+            divz.setAttribute("onclick", "viewer(this.id)");
+            divx.appendChild(divz);
+          }
+          div.appendChild(divx);
+        }
+        let host = document.getElementById('host');
+        host.appendChild(div);
+      }
+      for (var i = 0; i < 2; i++) {
+        let br = document.createElement('br');
+        document.getElementsByTagName('body')[0].appendChild(br);
+        cryppassKey = "nbehzxz4";
+      }
+      let divl = document.createElement('div');
+      divl.setAttribute('class', "battey");
+      let divppL = document.createElement('div');
+      divppL.setAttribute('class', "axeZ");
+      let btnL = document.createElement('input');
+      btnL.setAttribute("onclick", "loging()");btnL.setAttribute("type", "button");
+      btnL.setAttribute("class", "seteditbtn");btnL.setAttribute("value", "LOGIN");
+      divppL.appendChild(btnL);divl.appendChild(divppL);
+      let diLS = document.createElement('div');
+      diLS.setAttribute("class", "view");diLS.setAttribute("id", "logview");
+      diLS.appendChild(divppL);
+      let bd = document.getElementsByTagName('body')[0];
+      bd.appendChild(diLS);
+      startupset();
+    }
+    function loging() {
+      let holder = document.createElement('div');
+      holder.setAttribute("class", "hdiag");
+      for (var i = 0; i < 4; i++) {
+        let hl = document.createElement('div');
+        hl.setAttribute("class", "hhldiag");
+        if (i == 0) {
+          let ttl = document.createElement('p');
+          ttl.innerText = "Login";
+          let cls = document.createElement('input');
+          cls.setAttribute("onclick", "closediag()");cls.setAttribute("type", "button");
+          cls.setAttribute("class", "clsbtn");cls.setAttribute("value", "X");
+          hl.appendChild(ttl);hl.appendChild(cls);
+          let br = document.createElement('br');
+          hl.appendChild(br);
+        }
+        else if (i == 1) {
+          let ttl = document.createElement('p');
+          ttl.innerText = "PASSWORD:";
+          hl.appendChild(ttl);
+          let slct = document.createElement("input");slct.setAttribute("type", "text");
+          slct.setAttribute("id", "PASSWORD");slct.setAttribute("class", "inputer");
+          hl.appendChild(slct);
+        }
+        else if (i == 2) {
+          let ttl = document.createElement('p');
+          ttl.setAttribute("id", "passINC");
+          ttl.innerText = "";
+          hl.appendChild(ttl);
+          let br = document.createElement('br');
+          hl.appendChild(br);
+        }
+        else {
+          let btn = document.createElement('input');
+          btn.setAttribute("onclick", "loged()");btn.setAttribute("type", "button");
+          btn.setAttribute("class", "seteditbtn");btn.setAttribute("value", "login!");
+          hl.appendChild(btn);
+        }
+        holder.appendChild(hl);
+      }
+      let bg = document.createElement('div');
+      bg.setAttribute("class", "bgdiag");
+      bg.setAttribute("id", "seteditdiag");
+      bg.appendChild(holder);
+      document.getElementsByTagName('body')[0].appendChild(bg);
+    }
+    function loged() {
+      let psk = document.getElementById('PASSWORD').value;
+      let chifr = decoder(psk);
+      if (chifr == cryppassKey) {
+        passKey = chifr;
+        document.getElementById('passINC').innerText = "PASSWORD CORRECT";
+        document.getElementById('passINC').setAttribute("style", "color:green;font-weight: bold;");
+        let pieux = document.getElementsByClassName('eley');
+        for (var i = 0; i < pieux.length; i++) {
+          pieux[i].removeAttribute("onclick");
+          pieux[i].setAttribute("onclick", "opendialog(this.id)");
+        }
+        let xcode = decoderX("");
+        //document.getElementById('logview').remove();
+        //closediag();
+      }
+      else {
+        document.getElementById('passINC').innerText = "PASSWORD INCORRECT";
+        document.getElementById('passINC').setAttribute("style", "color:red;font-weight: bold;");
+      }
+    }
+    function viewer(id) {
+      let holder = document.createElement('div');
+      holder.setAttribute("class", "hdiag");
+      for (var i = 0; i < 4; i++) {
+        let hl = document.createElement('div');
+        hl.setAttribute("class", "hhldiag");
+        if (i == 0) {
+          let ttl = document.createElement('p');
+          let idf = id.replace("%", "'");idf = idf.replace("#", "\"");
+          ttl.innerText = idf;
+          let cls = document.createElement('input');
+          cls.setAttribute("onclick", "closediag()");cls.setAttribute("type", "button");
+          cls.setAttribute("class", "clsbtn");cls.setAttribute("value", "X");
+          hl.appendChild(ttl);hl.appendChild(cls);
+          let br = document.createElement('br');
+          hl.appendChild(br);
+        }
+        else if (i == 1) {
+          let ttl = document.createElement('p');
+          let date_data;
+          if (dec[id] != undefined) {
+            date_data = dec[id][0]
+          }
+          else {
+            date_data = undefined;
+          }
+          ttl.innerText = "Date: " + date_data;
+          hl.appendChild(ttl);
+        }
+        else if (i == 2) {
+          let ttl = document.createElement('p');
+          let date_data;
+          if (dec[id] != undefined) {
+            date_data = dec[id][1]
+          }
+          else {
+            date_data = undefined;
+          }
+          ttl.innerText = "Expe: " + date_data;
+          hl.appendChild(ttl);
+        }
+        else if (i == 3 && passKey == cryppassKey) {
+          let btn = document.createElement('input');
+          btn.setAttribute("onclick", "editdialog('"+id+"')");btn.setAttribute("type", "button");
+          btn.setAttribute("class", "seteditbtn");btn.setAttribute("value", "EDIT!");
+          hl.appendChild(btn);
+        }
+        holder.appendChild(hl);
+      }
+      let bg = document.createElement('div');
+      bg.setAttribute("class", "bgdiag");
+      bg.setAttribute("id", "seteditdiag");
+      bg.appendChild(holder);
+      document.getElementsByTagName('body')[0].appendChild(bg);
+    }
+    function closediag() {
+      //seteditdiag
+      document.getElementById('seteditdiag').remove();
+    }
+    function decoder(passkey) {
+      dic = "abcdefghijklmnopqrstuvwxyz0123456789";
+      //let passkey = document.getElementById('id').value;
+      dic = dic.split("");
+      let newdic = new Array();
+      passkey = passkey.split("");
+      for (var c = 0; c < passkey.length; c++) {
+        let ind = 0;
+        for (var i = 0; i < newdic.length; i++) {
+          if (newdic[i] == passkey[c]) {
+            ind = 1;
+          }
+        }
+        if (ind == 0) {
+          newdic.push(passkey[c]);
+        }
+      }
+      dic.forEach((char) => {
+        let x = 0;
+        for (var c = 0; c < newdic.length; c++) {
+          if (newdic[c] == char) {
+            x = 1;
+          }
+        }
+        if (x == 0) {
+          newdic.push(char);
+        }
+      });
+      let Con_Dic = new Object();
+      deCon_Dic = new Object();
+      for (var i = 0; i < dic.length; i++) {
+        Con_Dic[dic[i]] = newdic[i];
+      }
+      for (var i = 0; i < dic.length; i++) {
+        deCon_Dic[newdic[i]] = dic[i];
+      }
+      let trans = "";
+      for (var i = 0; i < passkey.length; i++) {
+        trans += Con_Dic[passkey[i]];
+      }
+      return trans;
+    }
+    function decoderX(passkey) {
+      let psk = "";
+      passkey = passkey.split("");
+      for (var i = 0; i < passkey.length; i++) {
+        if (passkey[i] in dic) {
+          psk += deCon_Dic[passkey[i]];
+        }
+        else {
+          psk += passkey[i];
+        }
+      }
+      return psk;
+    }
+    opening();
+    //startupset();
+  </script>
 </html>
-
-
-
